@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Todo List</title>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}"><link rel="stylesheet" href="{% static 'css/styles.css' %}">
+</head>
+<body>
+    <div class="container">
+        <h1 class="title">My Todo List</h1>
+        <div class="dark-mode-toggle">
+            <input type="checkbox" id="dark-mode-toggle" class="dark-mode-toggle__checkbox">
+            <label for="dark-mode-toggle" class="dark-mode-toggle__label">
+                <span class="dark-mode-toggle__icon"></span>
+            </label>
+        </div>
+        <form class="todo-form" method="post" action="{% url 'add_task' %}">
+            {% csrf_token %}
+            <input type="text" name="title" placeholder="Add a new task..." required>
+            <button type="submit">Add</button>
+        </form>
+        <ul class="todo-list">
+            {% for task in tasks %}
+            <li>
+                <input type="checkbox" id="task{{ task.id }}" 
+                       {% if task.completed %}checked{% endif %} 
+                       onclick="location.href='{% url 'task_completed' task.id %}'">
+                <label for="task{{ task.id }}">{{ task.title }}</label>
+                <button class="delete-btn" aria-label="Delete task" 
+                        onclick="location.href='{% url 'delete_task' task.id %}'">×</button>
+            </li>
+            {% empty %}
+            <p>No tasks available. Add a new one!</p>
+            {% endfor %}
+        </ul>
+    </div>
+    <script src="{% static 'js/script.js' %}"></script>
+</body>
+</html>
